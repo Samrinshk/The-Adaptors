@@ -20,7 +20,10 @@ public class ImageProcessor
 
 	public static void main(String[] args) {
 		
-		System.out.println("Hello");
+		File imagefolder = new File("The-Adaptors/Images/p2.1");
+		
+		//new line to save
+		
 	}
 	
 	
