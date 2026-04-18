@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * Thato: 224022442
  * Refiloe: 221014292
@@ -17,12 +19,30 @@ public class Main
 	{
 		// TODO Auto-generated method stub
 		
-		System.out.println("the world is so small");
+		//TESTING TESTING TESTING TESTNG
+//		ImageProcessor loader = new ImageProcessor();
+//		
+//		List<Patient> patients = loader.loadDataset("/C://Users//user//Desktop//The-Adaptors//Images/");
+//		
+//		System.out.println("Total patients: " + patients.size());
+//		
+//		for(Patient p : patients) {
+//			System.out.println("Patient: " + p.id + " || slices: " + p.imgSlices.size());
+//		}
 		
-		// Hii my name is Naledi
+//		//testing order of images (2)
+//		for(Patient p : patients) {
+//			System.out.println("Patient: " + p.id);
+//			for(int i = 0; i < Math.min(5,  p.imgSlices.size()); i++) {
+//				System.out.println("Slices no.: " + p.imgSlices.get(i).index);
+//			}
+//		}
 		
-		//Hello World
-
+		//testing (3)
+//		for(Patient p : patients) {
+//			List<ImageSlice> slice = p.imgSlices;
+//			System.out.println(p.id + " || firstSlice: " + slice.get(0).index + " || last: " + slice.get(slice.size()-1).index);
+//		}
 	}
 
 }
