@@ -55,7 +55,8 @@ public class GraphMapper {
 
 					//this is where we would call the addNode method but only if the intensity is above the threshhold value
 					if(intensity > threshold) {
-						//call addNode function
+						RegionNode newnode = new RegionNode(x,y,z, intensity);//creating the new node 
+						//Here we will add the node to the graph
 						System.out.println(" calcification at " + x+ ", " + y + ", " + z);
 					}
 
