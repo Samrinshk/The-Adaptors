@@ -31,7 +31,6 @@ public class Patient {
 	}
 
 
-
 	public List<ImageSlice> getImgSlices() {
 		return imgSlices;
 	}
