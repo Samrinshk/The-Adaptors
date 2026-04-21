@@ -59,9 +59,6 @@ public class ImageLoader {
 						}else {
 							System.out.println("Skipped, non-image file: " + imageFiles[i].getName());
 						}
-						
-
-
 					}
 					
 				} catch (IOException e) {
@@ -70,16 +67,9 @@ public class ImageLoader {
 				}
 
 			}
-				
-			
 		}else {
 			loadedimages = new BufferedImage[0];
-		}
-
-		
-		
-		
-		
+		}	
 	}
 	
 	/*
@@ -93,6 +83,4 @@ public class ImageLoader {
 		 return loadedimages !=  null && loadedimages.length >0;
 	 }
 	
-	
-
 }

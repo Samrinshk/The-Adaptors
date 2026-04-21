@@ -1,3 +1,5 @@
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +35,36 @@ public class Main
 			System.out.println("No images were loaded.");
 			return;
 		}
+		
+		//get loaded images images
+		BufferedImage[] loadedimages = ILoader.getLoadedImages();
+		
+		//Convert loaded imeges intp ImageSlice objects
+		List<ImageSlice> slices = new ArrayList<>();
+		for(int i =0; i < loadedimages.length; i++) {
+			if(loadedimages[i] != null) {
+				slices.add(new ImageSlice(loadedimages[i],i));
+			}
+		}
+		
+		// we create a patient object for the scan
+		Patient patient = new Patient("Patient-01", slices);
+		
+		//pass loaded images into graph mapper
+		GraphMapper mapper = new GraphMapper(loadedimages);
+		
+		// convert loaded slices into RAG
+		RAG rag = mapper.translateToGraph();
+		
+		// stor graph inside patient
+		patient.setRag(rag);
+		
+		//testiiiiiing
+		System.out.println("Graph created YAY!!");
+		System.out.println("Patient ID: " + patient.getId());
+		System.out.println("Num slices: " + patient.getImgSlices().size());
+		System.out.println("Num nodes: " + patient.getRag().getNodeCount());
+		System.out.println("Num edges: " + patient.getRag().getEdgeCount());
 		
 		
 		

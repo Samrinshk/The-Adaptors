@@ -37,7 +37,7 @@ public class GraphMapper {
 		}
 		
 		List<RegionNode> createdNodes = new ArrayList<>();
-
+		int calcificationCount = 0;
 		/*
 		 * this is the triple nested loop which will traverse the 3D space
 		 */
@@ -69,14 +69,17 @@ public class GraphMapper {
 						//Here we will add the node to the graph
 						rag.addNode(newnode);
 						createdNodes.add(newnode);
-						System.out.println(" calcification at " + x+ ", " + y + ", " + z);
+						//System.out.println(" calcification at " + x+ ", " + y + ", " + z);
+						calcificationCount++;
 					}
-
 				}
 			}
-
 		}
-		connectAdjacentNodes(rag,createdNodes);
+		
+		// prints summary of every calcification
+		System.out.println("Total Clasifications found: " + calcificationCount);
+		//temporarilty commented out
+		//connectAdjacentNodes(rag,createdNodes);
 		return rag;
 
 	}
