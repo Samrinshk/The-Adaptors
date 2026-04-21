@@ -1,7 +1,7 @@
 /**
  * The pixels which reach the intensity threshold will be represented by the attributes in this class
  */
-public class RegionNode {
+public class RegionNode implements INode<Integer> {
 
 	//These are where the coordinates of each node will ge stored
 	private int x;
@@ -19,33 +19,57 @@ public class RegionNode {
 	}
 
 
-	public int getX() {
+	@Override
+	public Integer getElement() {
+		
+		return intensity;
+	}
+
+
+	@Override
+	public void setElement(Integer element) {
+		this.intensity = element;
+		
+	}
+
+
+	@Override
+	public double getX() {
+		
 		return x;
 	}
 
+	
 
 	public void setX(int x) {
 		this.x = x;
 	}
 
-
-	public int getY() {
+	@Override
+	public double getY() {
+		
 		return y;
 	}
-
 
 	public void setY(int y) {
 		this.y = y;
 	}
 
 
-	public int getZ() {
+	@Override
+	public double getZ() {
+		
 		return z;
 	}
-
-
+	
 	public void setZ(int z) {
 		this.z = z;
+	}
+
+	@Override
+	public double getAvgIntensity() {
+		
+		return intensity;
 	}
 
 
@@ -57,6 +81,14 @@ public class RegionNode {
 	public void setIntensity(int intensity) {
 		this.intensity = intensity;
 	}
+
+
+	@Override
+	public String toString() {
+		return "RegionNode [x=" + x + ", y=" + y + ", z=" + z + ", intensity=" + intensity + "]";
+	}
+
+
 	
 	
 	

@@ -4,35 +4,21 @@
  *the images by the folder instead if one by one
  */
 
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
-
+/**
+ *This class contains the logic for loading the images
+ */
 public class ImageLoader {
 
+	//stores all succesfully loaded image slices
 	private BufferedImage [] loadedimages;
 
-	public static void main(String [] args) {
-
-		/*
-		 * loading the images from a specific folder
-		 * when loadin from the peter doe folder write 
-		 * "Images/Patient-Doe Peter/Patient-Doe Peter/Study-2-CT[20010101]/Series-007"
-		 */
-		
-		ImageLoader load = new ImageLoader("Images/Patient-Doe Peter/Patient-Doe Peter/Study-2-CT[20010101]/Series-007");
-		
-		
-
-	}
-
-	/**
-	 *This class contains the logic for loading the images
-	 */
+	
 	public ImageLoader(String path) {
 
 		File folder = new File(path);
@@ -40,12 +26,19 @@ public class ImageLoader {
 		//Checking if the folder exist before performing any operations
 		if(!folder.exists() || !folder.isDirectory()) {
 			System.err.println(" Directry path does not exsist" + path);
+			loadedimages = new BufferedImage[0];
 			return;
 		}
 
 		//putting all the images in the folder into an array that we can iterate through
 		File[] imageFiles = folder.listFiles();
-
+		
+		/*
+		 * // stops the program early is the file is empty or unreadable if(imageFiles
+		 * == null || imageFiles.length == 0) { System.out.println("No files found in "
+		 * + path); loadedimages = new BufferedImage[0]; return; }
+		 */
+		
 		//we first check if the array is actually populated
 		if(imageFiles != null) {
 
@@ -58,33 +51,47 @@ public class ImageLoader {
 			for (int i = 0; i < imageFiles.length; i++) {
 
 				try {
-					loadedimages[i] = ImageIO.read(imageFiles[i]);
-					System.out.println("loaded " + imageFiles[i].getName());
+					if(imageFiles[i].isFile()) {
+						loadedimages[i] = ImageIO.read(imageFiles[i]);
+						
+						if(loadedimages[i] != null) {
+							System.out.println("loaded " + imageFiles[i].getName());
+						}else {
+							System.out.println("Skipped, non-image file: " + imageFiles[i].getName());
+						}
+						
 
 
+					}
+					
 				} catch (IOException e) {
-					System.err.println("error reading file");
+					System.err.println("error reading file" + imageFiles[i].getName());
 					e.printStackTrace();
 				}
 
 			}
+				
+			
+		}else {
+			loadedimages = new BufferedImage[0];
 		}
 
-		/*
-		 * here we are passing the array into a graph mapper instance
-		 */
-		 if(loadedimages != null) {
-			 System.out.println("Loading complete. Starting graph mapping...");
-			 GraphMapper mapper = new GraphMapper(loadedimages);
-			 mapper.translateToGraph();
-			 
-		 }
+		
 		
 		
 		
 	}
 	
-	
+	/*
+	 * Returns the loaded images that will be passed to the GraphMapper
+	 */
+	 public BufferedImage[] getLoadedImages() {
+		 return loadedimages;
+	 }
+	 
+	 public boolean hasImage() {
+		 return loadedimages !=  null && loadedimages.length >0;
+	 }
 	
 	
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+		<item value="org.eclipse.cdt.gdb:11.4.0.202309142347"/>
+		<item value="org.eclipse.cdt.gnu.build:11.4.0.202311121705"/>
+		<item value="org.eclipse.cdt.gnu.debug:11.4.0.202309151124"/>
+		<item value="org.eclipse.cdt.gnu.dsf:11.4.0.202309151124"/>
+		<item value="org.eclipse.cdt.gnu.multicorevisualizer:11.4.0.202309151124"/>
+		<item value="org.eclipse.cdt.native:11.4.0.202311271618"/>
+		<item value="org.eclipse.cdt.platform:11.4.0.202311271618"/>
+		<item value="org.eclipse.cdt.testsrunner.feature:11.4.0.202309151124"/>
+		<item value="org.eclipse.cdt:11.4.0.202311271618"/>
+		<item value="org.eclipse.emf.common:2.30.0.v20230916-0637"/>
+		<item value="org.eclipse.emf.ecore:2.36.0.v20231002-1156"/>
+		<item value="org.eclipse.help:2.3.1600.v20231201-0110"/>
+		<item value="org.eclipse.jdt:3.19.300.v20231201-0110"/>
+		<item value="org.eclipse.platform:4.30.0.v20231201-0512"/>
+		<item value="org.eclipse.rcp:4.30.0.v20231201-0512"/>
+	</list>
+</section>

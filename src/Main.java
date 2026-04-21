@@ -11,13 +11,33 @@ import java.util.List;
 
 public class Main 
 {
+	
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) 
 	{
-		// TODO Auto-generated method stub
+		/*
+		 * loading the images from a specific folder
+		 * when loadin from the peter doe folder write 
+		 * "Images/Patient-Doe Peter/Patient-Doe Peter/Study-2-CT[20010101]/Series-007"
+		 */
+		String path = "Images/Patient-Doe Peter/Patient-Doe Peter/Study-2-CT[20010101]/Series-007";
+		
+		//loads the images slices from the folder
+		ImageLoader ILoader = new ImageLoader(path);
+		
+		//if not images are loade this will make the program stop
+		if(!ILoader.hasImage()) {
+			System.out.println("No images were loaded.");
+			return;
+		}
+		
+		
+		
+		
+		
 		
 		//TESTING TESTING TESTING TESTNG
 //		ImageProcessor loader = new ImageProcessor();
