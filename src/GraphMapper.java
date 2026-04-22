@@ -18,6 +18,8 @@ public class GraphMapper {
 
 	private BufferedImage [] loadedimages;
 	private int threshold = 200;
+	
+	private int steps = 4;
 
 	//the constructer that recives the array of loaded images from the imageloader class
 	public GraphMapper(BufferedImage[] images) {
@@ -53,9 +55,9 @@ public class GraphMapper {
 			int width = currentslice.getWidth();
 			int height = currentslice.getHeight();
 
-			for (int y = 0; y < height; y++) {
+			for (int y = 0; y < height; y += steps) {
 
-				for(int x = 0; x < width ; x++) {
+				for(int x = 0; x < width ; x += steps) {
 
 					//getting the greyscale value since the images are already in greyscale we can acces the gryscale value dirctly 
 
@@ -77,9 +79,9 @@ public class GraphMapper {
 		}
 		
 		// prints summary of every calcification
-		System.out.println("Total Clasifications found: " + calcificationCount);
+		System.out.println("Total Calcifications found: " + calcificationCount);
 		//temporarilty commented out
-		//connectAdjacentNodes(rag,createdNodes);
+		connectAdjacentNodes(rag,createdNodes);
 		return rag;
 
 	}
