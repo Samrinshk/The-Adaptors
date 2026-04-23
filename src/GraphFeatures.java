@@ -28,6 +28,11 @@ public class GraphFeatures {
 	public double getDensity() {
 		return density;
 	}
+	@Override
+	public String toString() {
+		return "GraphFeatures [nodeCount=" + nodeCount + ", edgeCount=" + edgeCount + ", avgIntensity=" + avgIntensity
+				+ ", avgDegree=" + avgDegree + ", density=" + density + "]";
+	}
 	
 	
 	

@@ -12,6 +12,7 @@ public class Patient {
 	private String id;
 	private List<ImageSlice> imgSlices;
 	private RAG rag;
+	private GraphFeatures features;
 	
 	public Patient(String id, List<ImageSlice> imgSlices) {
 		this.id = id;
@@ -53,5 +54,16 @@ public class Patient {
 		this.rag = rag;
 	}
 
+
+
+	public GraphFeatures getFeatures() {
+		return features;
+	}
+
+
+
+	public void setFeatures(GraphFeatures features) {
+		this.features = features;
+	}
 	
 }
