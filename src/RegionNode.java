@@ -4,6 +4,7 @@
 public class RegionNode implements INode<Integer> {
 
 	//These are where the coordinates of each node will ge stored
+	private int id;
 	private int x;
 	private int y;
 	private int z;
@@ -11,7 +12,8 @@ public class RegionNode implements INode<Integer> {
 	private int intensity;//this is the greyscale value it is >200 but it will also help in similarity detection
 	
 	
-	public RegionNode(int x, int y, int z, int intensity) {
+	public RegionNode(int id, int x, int y, int z, int intensity) {
+		this.id =id;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -30,6 +32,17 @@ public class RegionNode implements INode<Integer> {
 	public void setElement(Integer element) {
 		this.intensity = element;
 		
+	}
+
+	
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 

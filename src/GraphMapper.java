@@ -40,6 +40,8 @@ public class GraphMapper {
 		
 		List<RegionNode> createdNodes = new ArrayList<>();
 		int calcificationCount = 0;
+		
+		int nodeIdCounter = 0;
 		/*
 		 * this is the triple nested loop which will traverse the 3D space
 		 */
@@ -67,7 +69,7 @@ public class GraphMapper {
 
 					//this is where we would call the addNode method but only if the intensity is above the threshhold value
 					if(intensity > threshold) {
-						RegionNode newnode = new RegionNode(x,y,z, intensity);//creating the new node 
+						RegionNode newnode = new RegionNode(nodeIdCounter,x,y,z, intensity);//creating the new node 
 						//Here we will add the node to the graph
 						rag.addNode(newnode);
 						createdNodes.add(newnode);
@@ -95,7 +97,7 @@ public class GraphMapper {
 				
 				if(isAdjecent(a,b)) {
 					double weight = Math.abs(a.getIntensity() - b.getIntensity());
-					rag.addEdges(a, b, weight);
+					rag.addEdge(a, b, weight);
 				}
 			}
 		}
