@@ -74,7 +74,10 @@ public class GraphMapper {
 						rag.addNode(newnode);
 						createdNodes.add(newnode);
 						//System.out.println(" calcification at " + x+ ", " + y + ", " + z);
+						// counts the detected calcifications
 						calcificationCount++;
+						//increment id
+						nodeIdCounter++;
 					}
 				}
 			}
@@ -82,12 +85,17 @@ public class GraphMapper {
 		
 		// prints summary of every calcification
 		System.out.println("Total Calcifications found: " + calcificationCount);
-		//temporarilty commented out
+		//connects the nearby nodes with the graph edges
 		connectAdjacentNodes(rag,createdNodes);
 		return rag;
 
 	}
 
+	/**
+	 * 
+	 * @param rag: the graoh that is being built
+	 * @param nodes: the list of nodes creates 
+	 */
 	private void connectAdjacentNodes(RAG rag, List<RegionNode> nodes) {
 		for(int i = 0; i < nodes.size(); i++) {
 			RegionNode a = nodes.get(i);
@@ -103,7 +111,12 @@ public class GraphMapper {
 		}
 	}
 
-
+	/**
+	 * this checks whether the two nodes are close enough in the 3D space to be connected
+	 * @param a
+	 * @param b
+	 * @return if the nodes are adjacent we return true, otherwise we return false
+	 */
 	private boolean isAdjecent(RegionNode a, RegionNode b) {
 		int dx = Math.abs((int)a.getX()- (int)b.getX());
 		int dy = Math.abs((int)a.getY()- (int)b.getY());

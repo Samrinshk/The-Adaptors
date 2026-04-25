@@ -4,6 +4,7 @@ public class GraphFeatures {
 	private int edgeCount;
 	private double avgIntensity;
 	private double avgDegree;
+	
 	private double density;
 	public GraphFeatures(int nodeCount, int edgeCount, double avgIntensity, double avgDegree, double density) {
 		super();

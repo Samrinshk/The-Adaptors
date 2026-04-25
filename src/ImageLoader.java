@@ -72,13 +72,15 @@ public class ImageLoader {
 		}	
 	}
 	
-	/*
+	/**
 	 * Returns the loaded images that will be passed to the GraphMapper
 	 */
 	 public BufferedImage[] getLoadedImages() {
 		 return loadedimages;
 	 }
-	 
+	 /**
+	  * checks if any images were loaded
+	  */
 	 public boolean hasImage() {
 		 return loadedimages !=  null && loadedimages.length >0;
 	 }

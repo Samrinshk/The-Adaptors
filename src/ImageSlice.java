@@ -15,5 +15,15 @@ public class ImageSlice {
 		this.image = image;
 		this.index = index;
 	}
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+	
+	
 	
 }

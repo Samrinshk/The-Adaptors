@@ -56,7 +56,7 @@ public class Main
 		// convert loaded slices into RAG
 		RAG rag = mapper.translateToGraph();
 		
-		// stor graph inside patient
+		// store graph inside patient
 		patient.setRag(rag);
 		
 		//testiiiiiing
