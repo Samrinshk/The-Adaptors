@@ -59,12 +59,20 @@ public class Main
 		// store graph inside patient
 		patient.setRag(rag);
 		
+		//Extract graph features from graph
+		FeatureExtractor FExtractor = new FeatureExtractor();
+		GraphFeatures GFeatures = FExtractor.extractFeatures(rag);
+		
+		//store the extracted features inside the patient
+		patient.setFeatures(GFeatures);
+		
 		//testiiiiiing
 		System.out.println("Graph created YAY!!");
 		System.out.println("Patient ID: " + patient.getId());
 		System.out.println("Num slices: " + patient.getImgSlices().size());
 		System.out.println("Num nodes: " + patient.getRag().getNodeCount());
 		System.out.println("Num edges: " + patient.getRag().getEdgeCount());
+		System.out.println("Extracted grpah features: " + patient.getFeatures());
 		
 		
 		
