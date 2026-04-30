@@ -56,6 +56,7 @@ public class ImageLoader {
 						
 						if(loadedimages[i] != null) {
 							System.out.println("loaded " + imageFiles[i].getName());
+							//System.out.println("Loaded " + loadedimages.length + " slices");
 						}else {
 							System.out.println("Skipped, non-image file: " + imageFiles[i].getName());
 						}

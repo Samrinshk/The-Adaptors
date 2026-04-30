@@ -19,7 +19,7 @@ public class GraphMapper {
 	private BufferedImage [] loadedimages;
 	private int threshold = 200;
 	
-	private int steps = 4;
+	private int steps = 6;
 
 	//the constructer that recives the array of loaded images from the imageloader class
 	public GraphMapper(BufferedImage[] images) {

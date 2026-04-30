@@ -60,6 +60,7 @@ public class FeatureExtractor {
 			return 0;
 		}
 		
-		return (2.0 * edgeCount) / (nodeCount * (nodeCount -1 ));
+		double possibleEdges = (double) nodeCount*(nodeCount -1);
+		return (2.0 * edgeCount) / possibleEdges;
 	}
 }
