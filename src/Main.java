@@ -68,6 +68,9 @@ public class Main
 		//Initialise KD-Tree
 		KDTree patientTree = new KDTree();
 		
+		//Create classifier 
+		KNNClassifier knn = new KNNClassifier();
+		
 		for (Patient p : patients)
 		{
 			GraphFeatures f = p.getFeatures();
@@ -86,31 +89,40 @@ public class Main
 		System.out.println("KD-Tree populated with " + patients.size() + " patients.");
 		
 		if (!patients.isEmpty()) {
+			
 			//pick a target patient - first
 			Patient targetP = patients.get(0);
+			GraphFeatures targetFeatures = targetP.getFeatures();
 			
-			double[] targetVector = {
-					targetP.getFeatures().getAvgIntensity(),
-					targetP.getFeatures().getDensity(),
-					targetP.getFeatures().getAvgDegree()
-			};
+			System.out.println("Running Similarity for: " + targetP.getId());
 			
-			System.out.println("Searching KD-Tree for top 3 matches for: " + targetP.getId()); 
+			List<Patient> matches = knn.getNearestNeighbours(targetFeatures, patientTree, 3);
 			
-			//Invoke the findKNearest method
-			List<Patient> matches = patientTree.findKNearest(targetVector, 3);
+			String category = knn.Classify(targetFeatures, patientTree, 3);
+			System.out.println("Result: " + category);
 			
-			for (int i = 0 ; i < matches.size(); i++)
+			System.out.println("Top matches: ");
+			
+			for (int i = 0; i < matches.size(); i++)
 			{
 				Patient match = matches.get(i);
 				
-				double dist = patientTree.distance(targetVector, new double[] {
-						match.getFeatures().getAvgIntensity(),
+				double[] targetArr = {
+						targetFeatures.getAvgIntensity(), 
+						targetFeatures.getDensity(),
+						targetFeatures.getAvgDegree()
+				};
+				
+				double[] matchArr = {
+						match.getFeatures().getAvgIntensity(), 
 						match.getFeatures().getDensity(),
 						match.getFeatures().getAvgDegree()
-				});
+				};
 				
-				System.out.println((i+1) + ". Match: " + match.getId() + " | Distance: " + String.format("%4f", dist));
+				double dist = patientTree.distance(targetArr, matchArr);
+				
+				System.out.println((i+1) + ". " + match.getId() + " (Distance: " + String.format("%4f", dist) + ")");
+						
 			}
 			
 		}
