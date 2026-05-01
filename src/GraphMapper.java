@@ -21,7 +21,7 @@ public class GraphMapper {
 	
 	private int steps = 6;
 
-	//the constructer that recives the array of loaded images from the imageloader class
+	//the constructor that receives the array of loaded images from the imageloader class
 	public GraphMapper(BufferedImage[] images) {
 		this.loadedimages = images;
 	}
@@ -40,7 +40,6 @@ public class GraphMapper {
 		
 		List<RegionNode> createdNodes = new ArrayList<>();
 		int calcificationCount = 0;
-		
 		int nodeIdCounter = 0;
 		/*
 		 * this is the triple nested loop which will traverse the 3D space
@@ -122,7 +121,7 @@ public class GraphMapper {
 		int dy = Math.abs((int)a.getY()- (int)b.getY());
 		int dz = Math.abs((int)a.getZ()- (int)b.getZ());
 		
-		return dx <= 1 && dy <=1 && dz<= 1 && !(dx==0 && dy==0 && dz==0);
+		return dx <= steps && dy <= steps && dz<= 1 && !(dx==0 && dy==0 && dz==0);
 		
 	}
 }

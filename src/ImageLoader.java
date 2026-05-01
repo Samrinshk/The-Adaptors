@@ -33,16 +33,19 @@ public class ImageLoader {
 		//putting all the images in the folder into an array that we can iterate through
 		File[] imageFiles = folder.listFiles();
 		
-		/*
-		 * // stops the program early is the file is empty or unreadable if(imageFiles
-		 * == null || imageFiles.length == 0) { System.out.println("No files found in "
-		 * + path); loadedimages = new BufferedImage[0]; return; }
-		 */
 		
 		//we first check if the array is actually populated
-		if(imageFiles != null) {
-
-			//creating a new BufferedImage array where the loaded images will be stored
+		  if(imageFiles != null) { 
+			  for(int i = 0; i < imageFiles.length; i++) {
+				  for(int j = i + 1; j < imageFiles.length; j++) {
+					  if(imageFiles[i].getName().compareToIgnoreCase(imageFiles[j].getName()) > 0) {
+						  File temp = imageFiles[i];
+						  imageFiles[i] = imageFiles[j];
+						  imageFiles[j] = temp;
+					  }
+				  }
+			  }
+		
 			loadedimages = new BufferedImage[imageFiles.length];
 
 			/*

@@ -87,7 +87,7 @@ public class KDTree
 	 * @param k
 	 * @return
 	 */
-	public List<Patient> findKNearest(double[] target, int k)
+	public List<Patient> findKNearest(double[] target, Patient targetPatient, int k)
 	{
 		//Create a PQ that ranks by distance 
 		PriorityQueue<NodeDistance> pq = new PriorityQueue<>(new Comparator<NodeDistance>() {
@@ -108,9 +108,11 @@ public class KDTree
 				return 0;
 			}
 		});
+		// Check every node in the tree
+		collectAllNodes(root, target,targetPatient,pq);
 		
 		//Fill the PQ 
-		searchRecursive (root, target, 0, pq);
+		//searchRecursive (root, target, 0, pq);
 		
 		//Pull the top 'k' patients
 		List<Patient> results = new ArrayList<>();
@@ -123,6 +125,21 @@ public class KDTree
 		return results;
 	}
 	
+	private void collectAllNodes(KDNode node, double[] target, Patient targetPatient, PriorityQueue<NodeDistance> pq){
+		if(node == null) {
+			return;
+		}
+		
+		if(targetPatient == null || !node.getPatient().getId().equals(targetPatient.getId())) {
+			double newDist = distance(target, node.getPoint());
+			pq.add(new NodeDistance(node, newDist));
+		}
+		
+		collectAllNodes(node.getLeft(), target, targetPatient, pq);
+		collectAllNodes(node.getRight(), target, targetPatient, pq);
+		
+	}
+
 	/**
 	 * @param node
 	 * @param target

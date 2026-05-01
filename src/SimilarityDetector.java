@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,21 +24,33 @@ public class SimilarityDetector {
 	/**
 	 * Finds the top 'k' most similar patients to a target patient
 	 */
-	public List<Patient> findTopMatch(GraphFeatures target, List<Patient> dataset, int k)
+	public List<Patient> findTopMatch(Patient target, List<Patient> dataset, int k)
 	{
-		dataset.sort(new Comparator<Patient>() {
+		// Create a copy so the original dataset order is not changed
+		List<Patient> filtered  = new ArrayList<>();
+		
+		// Exclude the target patient from the comparison list
+		for(int i = 0; i < dataset.size(); i++){
+			Patient patient = dataset.get(i);
+			if(!patient.getId().equals(target.getId())) {
+				filtered.add(patient);
+			}
+		}
+		
+		// Sort the copied list by similarity
+		filtered.sort(new Comparator<Patient>() {
 
 			@Override
 			public int compare(Patient p1, Patient p2) {
-				double dist1 = SimilarityDetector.this.compare(target, p1.getFeatures());
-				double dist2 = SimilarityDetector.this.compare(target, p2.getFeatures());
+				double dist1 = SimilarityDetector.this.compare(target.getFeatures(), p1.getFeatures());
+				double dist2 = SimilarityDetector.this.compare(target.getFeatures(), p2.getFeatures());
 				return Double.compare(dist1, dist2);
 			}
 			
 		});
 		
 		
-		return dataset.subList(0, Math.min(k,  dataset.size()));
+		return filtered.subList(0, Math.min(k,  filtered.size()));
 		
 	}
 }

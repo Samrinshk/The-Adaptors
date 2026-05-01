@@ -2,7 +2,9 @@ import java.util.List;
 
 public class KNNClassifier {
 	
-	public List<Patient> getNearestNeighbours (GraphFeatures target, KDTree tree, int k) {
+	public List<Patient> getNearestNeighbours (Patient targetPatient, KDTree tree, int k) {
+		
+		GraphFeatures target = targetPatient.getFeatures();
 		
 		//Covert feature object into the double array the KDTree needs
 		double[] targetPoint = {
@@ -11,12 +13,12 @@ public class KNNClassifier {
 				target.getAvgDegree()
 		};
 		
-		return tree.findKNearest(targetPoint, k);
+		return tree.findKNearest(targetPoint, targetPatient, k);
 	}
 	
-	public String Classify(GraphFeatures target, KDTree tree, int k) {
+	public String Classify(Patient targetPatient, KDTree tree, int k) {
 		
-		List<Patient> neighbours = getNearestNeighbours(target, tree, k);
+		List<Patient> neighbours = getNearestNeighbours(targetPatient, tree, k);
 		
 		if (neighbours.isEmpty())
 		{

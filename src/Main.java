@@ -52,7 +52,7 @@ public class Main
 			Patient targetPatient = patients.get(0);
 			
 			int k = 3;
-			List<Patient> matches = detector.findTopMatch(targetPatient.getFeatures(), patients, k);
+			List<Patient> matches = detector.findTopMatch(targetPatient, patients, k);
 			
 			System.out.println("Top " + k + " matches for Patient " + targetPatient.getId() + ":");
 			
@@ -96,9 +96,9 @@ public class Main
 			
 			System.out.println("Running Similarity for: " + targetP.getId());
 			
-			List<Patient> matches = knn.getNearestNeighbours(targetFeatures, patientTree, 3);
+			List<Patient> matches = knn.getNearestNeighbours(targetP, patientTree, 3);
 			
-			String category = knn.Classify(targetFeatures, patientTree, 3);
+			String category = knn.Classify(targetP, patientTree, 3);
 			System.out.println("Result: " + category);
 			
 			System.out.println("Top matches: ");
