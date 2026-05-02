@@ -1,35 +1,47 @@
 import java.util.List;
 
+/**
+ * This class classifies an unknown patient by finding
+ * the single most similar known disease case.
+ */
 public class KNNClassifier {
-	
-	public List<Patient> getNearestNeighbours (Patient targetPatient, KDTree tree, int k) {
-		
+
+	/**
+	 * Returns the nearest known disease cases for the target patient.
+	 * 
+	 * @param targetPatient the unknown patient being compared
+	 * @param tree the KDTree containing known disease cases
+	 * @param k the number of similar cases to return
+	 * @return list of nearest known cases
+	 */
+	public List<Patient> getNearestNeighbours(Patient targetPatient, KDTree tree, int k) {
 		GraphFeatures target = targetPatient.getFeatures();
-		
-		//Covert feature object into the double array the KDTree needs
+
 		double[] targetPoint = {
 				target.getAvgIntensity(),
 				target.getDensity(),
 				target.getAvgDegree()
 		};
-		
+
 		return tree.findKNearest(targetPoint, targetPatient, k);
 	}
-	
-	public String Classify(Patient targetPatient, KDTree tree, int k) {
-		
-		List<Patient> neighbours = getNearestNeighbours(targetPatient, tree, k);
-		
-		if (neighbours.isEmpty())
-		{
-			return "No similar cases found";
+
+	/**
+	 * Classifies the unknown patient using the single closest known disease case.
+	 * 
+	 * @param targetPatient the unknown patient
+	 * @param tree the KDTree containing known disease cases
+	 * @return the predicted disease category
+	 */
+	public String Classify(Patient targetPatient, KDTree tree) {
+		List<Patient> neighbours = getNearestNeighbours(targetPatient, tree, 1);
+
+		if (neighbours.isEmpty()) {
+			return "Unknown";
 		}
-		
-		//Classify the current scan 
-		Patient BestMatch = neighbours.get(0);
-		
-		return "Scan classified as similar to Case: " + BestMatch.getId() + 
-				" (Based on " + neighbours.size() + " nearest neighbours)";		
+
+		// Use the category of the single closest known case
+		Patient bestMatch = neighbours.get(0);
+		return bestMatch.getCategory();
 	}
-	
 }
