@@ -10,7 +10,7 @@ public class Dashboard extends JFrame {
 
     // Backend Variables
     private Patient currentPatient;
-    private List<Patient> loadedPatientsList; // Stores all loaded patients
+    private List<Patient> loadedPatientsList; 
     
     // UI Components
     private JLabel imageLabel;
@@ -18,16 +18,16 @@ public class Dashboard extends JFrame {
     private JLabel patientIdLabel;
     private JLabel sliceCountLabel;
     private JLabel diseaseLabel;
-    private JComboBox<String> patientDropdown; // New Dropdown Menu
+    private JComboBox<String> patientDropdown; 
     
     public Dashboard() {
-        // 1. Set up the Main Window
+        
         setTitle("The Adaptors: CT Calcification Analyzer");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         
-        // 2. Top Panel (Header)
+        
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(45, 52, 54));
         JLabel titleLabel = new JLabel("CT Scan Disease Classifier");
@@ -36,14 +36,14 @@ public class Dashboard extends JFrame {
         topPanel.add(titleLabel);
         add(topPanel, BorderLayout.NORTH);
         
-        // 3. Left Panel (Controls)
+        
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         JButton loadButton = new JButton("Load Patient Folder");
         
-        // Dropdown Menu Setup ---
+        
         JLabel menuLabel = new JLabel("Select Patient:");
         patientDropdown = new JComboBox<>();
         patientDropdown.setEnabled(false); // Disabled until patients are loaded
@@ -66,15 +66,24 @@ public class Dashboard extends JFrame {
         leftPanel.add(progressBar);
         add(leftPanel, BorderLayout.WEST);
         
-        // 4. Center Panel (The Visualizer)
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBackground(Color.BLACK);
+        
+        JTabbedPane centerTabbedPane = new JTabbedPane();
+        
+        // Tab 1: The MIP Image
+        JPanel imagePanel = new JPanel(new BorderLayout());
+        imagePanel.setBackground(Color.BLACK);
         imageLabel = new JLabel("No Image Loaded", SwingConstants.CENTER);
         imageLabel.setForeground(Color.DARK_GRAY);
-        centerPanel.add(imageLabel, BorderLayout.CENTER);
-        add(centerPanel, BorderLayout.CENTER);
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+        centerTabbedPane.addTab("MIP Visualizer", imagePanel);
         
-        // 5. Right Panel (Patient Details)
+        // Tab 2: The Node/Edge Graph
+        GraphVisualizer graphPanel = new GraphVisualizer();
+        centerTabbedPane.addTab("RAG Architecture", graphPanel);
+        
+        add(centerTabbedPane, BorderLayout.CENTER);
+        
+        
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -178,12 +187,12 @@ public class Dashboard extends JFrame {
                                     if (mipImage != null) {
                                         imageLabel.setText(""); 
                                         imageLabel.setIcon(new ImageIcon(mipImage));
-                                        
-                                        // Update labels for the new patient
+                                        graphPanel.setGraph(currentPatient.getRag());
+                                       
                                         patientIdLabel.setText("Patient ID: " + currentPatient.getId());
                                         sliceCountLabel.setText("Total Slices: " + currentPatient.getImgSlices().size());
                                         
-                                        // Reset classification label
+                                        
                                         diseaseLabel.setText("Predicted Disease: Pending...");
                                         diseaseLabel.setForeground(Color.BLACK);
                                     }
@@ -215,7 +224,7 @@ public class Dashboard extends JFrame {
                     @Override
                     protected String doInBackground() throws Exception {
                         PatientDatasetLoader loader = new PatientDatasetLoader();
-                        // Make sure this folder exists inside your project!
+                        
                         List<Patient> knownPatients = loader.loadKnownPatients("Images/Known Des");
                         
                         KDTree tree = new KDTree();
