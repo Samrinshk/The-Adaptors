@@ -1,0 +1,218 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.List;
+
+public class Dashboard extends JFrame {
+
+    // Backend Variables
+    private Patient currentPatient;
+    
+    // UI Components
+    private JLabel imageLabel;
+    private JProgressBar progressBar;
+    private JLabel patientIdLabel;
+    private JLabel sliceCountLabel;
+    private JLabel diseaseLabel;
+    
+    public Dashboard() {
+        
+        setTitle("The Adaptors: CT Calcification Analyzer");
+        setSize(900, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        
+        
+        JPanel topPanel = new JPanel();
+        topPanel.setBackground(new Color(45, 52, 54));
+        JLabel titleLabel = new JLabel("CT Scan Disease Classifier");
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        topPanel.add(titleLabel);
+        add(topPanel, BorderLayout.NORTH);
+        
+        
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        JButton loadButton = new JButton("Load Patient Scan");
+        JButton classifyButton = new JButton("Run Classification");
+        
+        progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(false); // Hidden until a task runs
+        
+        leftPanel.add(loadButton);
+        leftPanel.add(Box.createVerticalStrut(15));
+        leftPanel.add(classifyButton);
+        leftPanel.add(Box.createVerticalStrut(30));
+        leftPanel.add(progressBar);
+        add(leftPanel, BorderLayout.WEST);
+        
+        
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBackground(Color.BLACK);
+        imageLabel = new JLabel("No Image Loaded", SwingConstants.CENTER);
+        imageLabel.setForeground(Color.DARK_GRAY);
+        centerPanel.add(imageLabel, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
+        
+      
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        JLabel infoHeader = new JLabel("Patient Information:");
+        infoHeader.setFont(new Font("Arial", Font.BOLD, 16));
+        
+        patientIdLabel = new JLabel("Patient ID: ---");
+        sliceCountLabel = new JLabel("Total Slices: ---");
+        
+        diseaseLabel = new JLabel("Predicted Disease: ---");
+        diseaseLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        
+        rightPanel.add(infoHeader);
+        rightPanel.add(Box.createVerticalStrut(15));
+        rightPanel.add(patientIdLabel);
+        rightPanel.add(Box.createVerticalStrut(10));
+        rightPanel.add(sliceCountLabel);
+        rightPanel.add(Box.createVerticalStrut(40));
+        rightPanel.add(diseaseLabel);
+        add(rightPanel, BorderLayout.EAST);
+        
+        
+        // Load Patient Action
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                
+                int result = fileChooser.showOpenDialog(Dashboard.this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFolder = fileChooser.getSelectedFile();
+                    String folderPath = selectedFolder.getAbsolutePath();
+                    
+                    progressBar.setVisible(true);
+                    
+                    // Background Worker to prevent UI freezing
+                    SwingWorker<BufferedImage, Void> worker = new SwingWorker<BufferedImage, Void>() {
+                        @Override
+                        protected BufferedImage doInBackground() throws Exception {
+                            PatientDatasetLoader datasetLoader = new PatientDatasetLoader();
+                            
+                            // Load the list of patients from the chosen folder
+                            List<Patient> loadedPatients = datasetLoader.loadPatients(folderPath);
+                            
+                            if (loadedPatients != null && !loadedPatients.isEmpty()) {
+                                // Grab the first patient from the list
+                                currentPatient = loadedPatients.get(0);
+                                
+                                // Generate the flattened 2D image
+                                return MIPGenerator.generateMIP(currentPatient.getImgSlices());
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void done() {
+                            progressBar.setVisible(false);
+                            try {
+                                BufferedImage mipImage = get();
+                                if (mipImage != null && currentPatient != null) {
+                                    imageLabel.setText(""); // clear text
+                                    imageLabel.setIcon(new ImageIcon(mipImage));
+                                    
+                                    // Update basic info labels
+                                    patientIdLabel.setText("Patient ID: " + currentPatient.getId());
+                                    sliceCountLabel.setText("Total Slices: " + currentPatient.getImgSlices().size());
+                                    diseaseLabel.setText("Predicted Disease: Pending...");
+                                    diseaseLabel.setForeground(Color.BLACK);
+                                } else {
+                                    JOptionPane.showMessageDialog(Dashboard.this, "Failed to load patient data or generate MIP.");
+                                }
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    };
+                    worker.execute();
+                }
+            }
+        });
+        
+        // Run Classification Action
+        classifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (currentPatient == null) {
+                    JOptionPane.showMessageDialog(Dashboard.this, "Please load a patient scan first!");
+                    return;
+                }
+                
+                progressBar.setVisible(true);
+                diseaseLabel.setText("Predicted Disease: Classifying...");
+                
+                SwingWorker<String, Void> mlWorker = new SwingWorker<String, Void>() {
+                    @Override
+                    protected String doInBackground() throws Exception {
+                        // 1. Load the known baseline dataset
+                        PatientDatasetLoader loader = new PatientDatasetLoader();
+                        List<Patient> knownPatients = loader.loadKnownPatients("Images/Known Des");
+                        
+                        // 2. Build the KDTree
+                        KDTree tree = new KDTree();
+                        for (Patient p : knownPatients) {
+                            GraphFeatures f = p.getFeatures();
+                            double[] featureVector = {
+                                    f.getAvgIntensity(),
+                                    f.getDensity(),
+                                    f.getAvgDegree()
+                            };
+                            tree.insert(featureVector, p);
+                        }
+                        
+                        // 3. Classify the current unknown patient
+                        KNNClassifier knn = new KNNClassifier();
+                        return knn.Classify(currentPatient, tree);
+                    }
+                    
+                    @Override
+                    protected void done() {
+                        progressBar.setVisible(false);
+                        try {
+                            String verdict = get();
+                            currentPatient.setCategory(verdict);
+                            
+                            // Update the UI with the final disease verdict
+                            diseaseLabel.setText("Predicted Disease: " + verdict);
+                            
+                            if(verdict.equalsIgnoreCase("High Risk") || verdict.toLowerCase().contains("severe")) {
+                            	diseaseLabel.setForeground(Color.RED);
+                            } else {
+                            	diseaseLabel.setForeground(new Color(0, 153, 0)); // Dark Green
+                            }
+                            
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            diseaseLabel.setText("Predicted Disease: Error");
+                        }
+                    }
+                };
+                mlWorker.execute();
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        // Run the dashboard
+        SwingUtilities.invokeLater(() -> {
+            Dashboard dashboard = new Dashboard();
+            dashboard.setVisible(true);
+        });
+    }
+}
