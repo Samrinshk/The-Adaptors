@@ -10,6 +10,7 @@ public class Dashboard extends JFrame {
 
     // Backend Variables
     private Patient currentPatient;
+    private List<Patient> loadedPatientsList; // Stores all loaded patients
     
     // UI Components
     private JLabel imageLabel;
@@ -17,15 +18,16 @@ public class Dashboard extends JFrame {
     private JLabel patientIdLabel;
     private JLabel sliceCountLabel;
     private JLabel diseaseLabel;
+    private JComboBox<String> patientDropdown; // New Dropdown Menu
     
     public Dashboard() {
-        
+        // 1. Set up the Main Window
         setTitle("The Adaptors: CT Calcification Analyzer");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         
-        
+        // 2. Top Panel (Header)
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(45, 52, 54));
         JLabel titleLabel = new JLabel("CT Scan Disease Classifier");
@@ -34,26 +36,37 @@ public class Dashboard extends JFrame {
         topPanel.add(titleLabel);
         add(topPanel, BorderLayout.NORTH);
         
-        
+        // 3. Left Panel (Controls)
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        JButton loadButton = new JButton("Load Patient Scan");
+        JButton loadButton = new JButton("Load Patient Folder");
+        
+        // --- NEW: Dropdown Menu Setup ---
+        JLabel menuLabel = new JLabel("Select Patient:");
+        patientDropdown = new JComboBox<>();
+        patientDropdown.setEnabled(false); // Disabled until patients are loaded
+        patientDropdown.setMaximumSize(new Dimension(200, 30));
+        
         JButton classifyButton = new JButton("Run Classification");
         
         progressBar = new JProgressBar();
         progressBar.setIndeterminate(true);
-        progressBar.setVisible(false); // Hidden until a task runs
+        progressBar.setVisible(false);
         
         leftPanel.add(loadButton);
-        leftPanel.add(Box.createVerticalStrut(15));
+        leftPanel.add(Box.createVerticalStrut(20));
+        leftPanel.add(menuLabel);
+        leftPanel.add(Box.createVerticalStrut(5));
+        leftPanel.add(patientDropdown);
+        leftPanel.add(Box.createVerticalStrut(20));
         leftPanel.add(classifyButton);
         leftPanel.add(Box.createVerticalStrut(30));
         leftPanel.add(progressBar);
         add(leftPanel, BorderLayout.WEST);
         
-        
+        // 4. Center Panel (The Visualizer)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(Color.BLACK);
         imageLabel = new JLabel("No Image Loaded", SwingConstants.CENTER);
@@ -61,7 +74,7 @@ public class Dashboard extends JFrame {
         centerPanel.add(imageLabel, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
         
-      
+        // 5. Right Panel (Patient Details)
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -84,8 +97,11 @@ public class Dashboard extends JFrame {
         rightPanel.add(diseaseLabel);
         add(rightPanel, BorderLayout.EAST);
         
+        // ---------------------------------------------------------
+        // ACTION LISTENERS
+        // ---------------------------------------------------------
         
-        // Load Patient Action
+        // Load Folder Action
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,42 +114,29 @@ public class Dashboard extends JFrame {
                     String folderPath = selectedFolder.getAbsolutePath();
                     
                     progressBar.setVisible(true);
+                    patientDropdown.setEnabled(false);
                     
-                    // Background Worker to prevent UI freezing
-                    SwingWorker<BufferedImage, Void> worker = new SwingWorker<BufferedImage, Void>() {
+                    SwingWorker<List<Patient>, Void> worker = new SwingWorker<List<Patient>, Void>() {
                         @Override
-                        protected BufferedImage doInBackground() throws Exception {
+                        protected List<Patient> doInBackground() throws Exception {
                             PatientDatasetLoader datasetLoader = new PatientDatasetLoader();
-                            
-                            // Load the list of patients from the chosen folder
-                            List<Patient> loadedPatients = datasetLoader.loadPatients(folderPath);
-                            
-                            if (loadedPatients != null && !loadedPatients.isEmpty()) {
-                                // Grab the first patient from the list
-                                currentPatient = loadedPatients.get(0);
-                                
-                                // Generate the flattened 2D image
-                                return MIPGenerator.generateMIP(currentPatient.getImgSlices());
-                            }
-                            return null;
+                            return datasetLoader.loadPatients(folderPath);
                         }
 
                         @Override
                         protected void done() {
                             progressBar.setVisible(false);
                             try {
-                                BufferedImage mipImage = get();
-                                if (mipImage != null && currentPatient != null) {
-                                    imageLabel.setText(""); // clear text
-                                    imageLabel.setIcon(new ImageIcon(mipImage));
-                                    
-                                    // Update basic info labels
-                                    patientIdLabel.setText("Patient ID: " + currentPatient.getId());
-                                    sliceCountLabel.setText("Total Slices: " + currentPatient.getImgSlices().size());
-                                    diseaseLabel.setText("Predicted Disease: Pending...");
-                                    diseaseLabel.setForeground(Color.BLACK);
+                                loadedPatientsList = get();
+                                if (loadedPatientsList != null && !loadedPatientsList.isEmpty()) {
+                                    // Clear old items and populate the dropdown menu
+                                    patientDropdown.removeAllItems();
+                                    for (Patient p : loadedPatientsList) {
+                                        patientDropdown.addItem(p.getId());
+                                    }
+                                    patientDropdown.setEnabled(true); // Turn menu on
                                 } else {
-                                    JOptionPane.showMessageDialog(Dashboard.this, "Failed to load patient data or generate MIP.");
+                                    JOptionPane.showMessageDialog(Dashboard.this, "No valid patients found in selected folder.");
                                 }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
@@ -145,26 +148,79 @@ public class Dashboard extends JFrame {
             }
         });
         
+        // --- NEW: Dropdown Menu Selection Action ---
+        patientDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (patientDropdown.getSelectedItem() != null && loadedPatientsList != null) {
+                    String selectedId = (String) patientDropdown.getSelectedItem();
+                    
+                    // Find the matched patient from our loaded list
+                    for (Patient p : loadedPatientsList) {
+                        if (p.getId().equals(selectedId)) {
+                            currentPatient = p;
+                            break;
+                        }
+                    }
+                    
+                    if (currentPatient != null) {
+                        // Generate their 2D image and update the UI
+                        progressBar.setVisible(true);
+                        
+                        SwingWorker<BufferedImage, Void> renderWorker = new SwingWorker<BufferedImage, Void>() {
+                            @Override
+                            protected BufferedImage doInBackground() throws Exception {
+                                return MIPGenerator.generateMIP(currentPatient.getImgSlices());
+                            }
+
+                            @Override
+                            protected void done() {
+                                progressBar.setVisible(false);
+                                try {
+                                    BufferedImage mipImage = get();
+                                    if (mipImage != null) {
+                                        imageLabel.setText(""); 
+                                        imageLabel.setIcon(new ImageIcon(mipImage));
+                                        
+                                        // Update labels for the new patient
+                                        patientIdLabel.setText("Patient ID: " + currentPatient.getId());
+                                        sliceCountLabel.setText("Total Slices: " + currentPatient.getImgSlices().size());
+                                        
+                                        // Reset classification label
+                                        diseaseLabel.setText("Predicted Disease: Pending...");
+                                        diseaseLabel.setForeground(Color.BLACK);
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        };
+                        renderWorker.execute();
+                    }
+                }
+            }
+        });
+        
         // Run Classification Action
         classifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentPatient == null) {
-                    JOptionPane.showMessageDialog(Dashboard.this, "Please load a patient scan first!");
+                    JOptionPane.showMessageDialog(Dashboard.this, "Please select a patient first!");
                     return;
                 }
                 
                 progressBar.setVisible(true);
                 diseaseLabel.setText("Predicted Disease: Classifying...");
+                diseaseLabel.setForeground(Color.BLACK);
                 
                 SwingWorker<String, Void> mlWorker = new SwingWorker<String, Void>() {
                     @Override
                     protected String doInBackground() throws Exception {
-                        // 1. Load the known baseline dataset
                         PatientDatasetLoader loader = new PatientDatasetLoader();
+                        // Make sure this folder exists inside your project!
                         List<Patient> knownPatients = loader.loadKnownPatients("Images/Known Des");
                         
-                        // 2. Build the KDTree
                         KDTree tree = new KDTree();
                         for (Patient p : knownPatients) {
                             GraphFeatures f = p.getFeatures();
@@ -176,7 +232,6 @@ public class Dashboard extends JFrame {
                             tree.insert(featureVector, p);
                         }
                         
-                        // 3. Classify the current unknown patient
                         KNNClassifier knn = new KNNClassifier();
                         return knn.Classify(currentPatient, tree);
                     }
@@ -188,13 +243,12 @@ public class Dashboard extends JFrame {
                             String verdict = get();
                             currentPatient.setCategory(verdict);
                             
-                            // Update the UI with the final disease verdict
                             diseaseLabel.setText("Predicted Disease: " + verdict);
                             
                             if(verdict.equalsIgnoreCase("High Risk") || verdict.toLowerCase().contains("severe")) {
-                            	diseaseLabel.setForeground(Color.RED);
+                                diseaseLabel.setForeground(Color.RED);
                             } else {
-                            	diseaseLabel.setForeground(new Color(0, 153, 0)); // Dark Green
+                                diseaseLabel.setForeground(new Color(0, 153, 0)); // Dark Green
                             }
                             
                         } catch (Exception ex) {
@@ -209,7 +263,6 @@ public class Dashboard extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Run the dashboard
         SwingUtilities.invokeLater(() -> {
             Dashboard dashboard = new Dashboard();
             dashboard.setVisible(true);
