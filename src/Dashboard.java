@@ -43,7 +43,7 @@ public class Dashboard extends JFrame {
         
         JButton loadButton = new JButton("Load Patient Folder");
         
-        // --- NEW: Dropdown Menu Setup ---
+        // Dropdown Menu Setup ---
         JLabel menuLabel = new JLabel("Select Patient:");
         patientDropdown = new JComboBox<>();
         patientDropdown.setEnabled(false); // Disabled until patients are loaded
@@ -97,10 +97,7 @@ public class Dashboard extends JFrame {
         rightPanel.add(diseaseLabel);
         add(rightPanel, BorderLayout.EAST);
         
-        // ---------------------------------------------------------
-        // ACTION LISTENERS
-        // ---------------------------------------------------------
-        
+       
         // Load Folder Action
         loadButton.addActionListener(new ActionListener() {
             @Override
@@ -148,7 +145,7 @@ public class Dashboard extends JFrame {
             }
         });
         
-        // --- NEW: Dropdown Menu Selection Action ---
+        //Dropdown Menu Selection Action
         patientDropdown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
