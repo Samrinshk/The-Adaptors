@@ -1,70 +1,70 @@
-/**
- * MIP(Maximum Intensity Projection)Generator is responsible for flattenig the 3D 
- * volume into a representative 2D image which will be displayed on the dashboard 
- * 
- * This is done by looping through all the slices in the patiants CT scan, finding the 
- * maximum intensity, in this case calcfication, and painting that onto a 2D image
- * 
- */
-
 import java.awt.image.BufferedImage;
 import java.util.List;
-/**
- * @param the list of slices for a single patiant
- * @return A 2D BufferedImage representing the MIP
- */
 
+/**
+ * This class generates a combined projection image from CT scan slices.
+ * It blends average intensity and maximum intensity so that
+ * the heart stays visible while brighter calcifications still stand out.
+ */
 public class MIPGenerator {
 
+	/**
+	 * Generates a combined projection image from the given slices.
+	 * 
+	 * @param slices the list of CT scan slices
+	 * @return the generated image
+	 */
 	public static BufferedImage generateMIP(List<ImageSlice> slices) {
-		
-		//chech if patiant has images
-		if(slices.isEmpty()) {
+
+		if (slices == null || slices.isEmpty()) {
 			return null;
 		}
-		
-		//get dimensions of the slice
-		int width = slices.get(0).getImage().getWidth();
-		int height = slices.get(0).getImage().getHeight();
-		
-		//Creating an image block which will store the final projection
-		BufferedImage mipImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		
-		//traverse the x , y coordinates
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
-				int maxInsensity = 0;
-				
-				//look at the z cordinate for the specific x,y coordinate
-				for(ImageSlice slice : slices) {
-					BufferedImage currentImage = slice.getImage();
-					
-					//get grb value and grayscale intensity
-					int rgb = currentImage.getRGB(x, y);
+
+		BufferedImage firstslice = slices.get(0).getImage();
+		int width = firstslice.getWidth();
+		int height = firstslice.getHeight();
+
+		BufferedImage mipImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+
+		// Use the middle slice range so the heart region is emphasized
+		int startSlice = slices.size() / 3;
+		int endSlice = (slices.size() * 2) / 3;
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+
+				int totalIntensity = 0;
+				int maxIntensity = 0;
+				int count = 0;
+
+				for (int z = startSlice; z < endSlice; z++) {
+					BufferedImage currentslice = slices.get(z).getImage();
+
+					int rgb = currentslice.getRGB(x, y);
 					int intensity = rgb & 0xFF;
-					
-					//finding the brightest pixel for this coordinate across the slices
-					if(intensity > maxInsensity) {
-						maxInsensity = intensity;
+
+					totalIntensity += intensity;
+					count++;
+
+					if (intensity > maxIntensity) {
+						maxIntensity = intensity;
 					}
 				}
-				
-				//create ab rgb value using the max intensity
-				int mipRGB = (maxInsensity << 16)| (maxInsensity << 8) | maxInsensity;
-				
-				//map the brightest pixel onto the 2D image
-				mipImage.setRGB(x, y, mipRGB);
-				
+
+				int avgIntensity = 0;
+
+				if (count > 0) {
+					avgIntensity = totalIntensity / count;
+				}
+
+				// Blend average and maximum intensity
+				int finalIntensity = (avgIntensity * 3 + maxIntensity) / 4;
+
+				int grayRGB = (finalIntensity << 16) | (finalIntensity << 8) | finalIntensity;
+				mipImage.setRGB(x, y, grayRGB);
 			}
 		}
-		
+
 		return mipImage;
-		
 	}
-	
-	
-	
-	
-	
-	
 }
