@@ -380,20 +380,31 @@ public class Dashboard extends JFrame {
 				KNNClassifier knn = new KNNClassifier();
 
 
-				String diseaseResult = knn.Classify(currentPatient, tree);                 
+				String riskLevel = "";
+				
+				String diseaseResult = knn.Classify(currentPatient, tree); 
+				
+				if(diseaseResult.toLowerCase().contains("aortic dissection")) {
+				    riskLevel = "EMERGENCY ROOM NOW!!";
+				}else {
+				    double avgIntensity = currentPatient.getFeatures().getAvgIntensity();
+				    
+				    if (avgIntensity > 250) {
+				        riskLevel = "High";
+				    } else if (avgIntensity < 210) {
+				        riskLevel = "Low";
+				    } else {
+				        // I fixed your commented-out logic here! If it's not > 250 and not < 210, 
+				        // it naturally falls into the "Moderate" category without needing complex OR/AND operators.
+				        riskLevel = "Moderate"; 
+				    }
+				}
 
 				String intensityResult = String.format("%.2f", currentPatient.getFeatures().getAvgIntensity());
 				
-				String riskLevel = new String();
 				
-				if (currentPatient.getFeatures().getAvgIntensity() > 250) {
-					riskLevel = "High";
-				}else if (currentPatient.getFeatures().getAvgIntensity() < 210){
-					riskLevel = "Low";
-				}else if (currentPatient.getFeatures().getAvgIntensity() > 211 ||currentPatient.getFeatures().getAvgIntensity() < 249){
-					riskLevel = "Moderate";
-				}
-
+				
+				
 				return new String[]{intensityResult, diseaseResult, riskLevel};
 			}
 
