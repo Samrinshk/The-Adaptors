@@ -20,6 +20,7 @@ public class Dashboard extends JFrame {
 	
 	private List<Patient> loadedPatients;
 	private Patient currentPatient;
+	private GraphVisualizer graphVisualizer;
 
 	
 	private JButton btnLoadPatient;
@@ -133,7 +134,7 @@ public class Dashboard extends JFrame {
 		centerPanel.setBackground(Color.WHITE);
 		centerPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 
-		JLabel titleLabel = new JLabel("2D Scan Preview", SwingConstants.LEFT);
+		JLabel titleLabel = new JLabel("3D Scan Preview", SwingConstants.LEFT);
 		titleLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
 		titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
@@ -150,6 +151,9 @@ public class Dashboard extends JFrame {
 	}
 
 	private void buildRightPanel() {
+		graphVisualizer = new GraphVisualizer();
+		graphVisualizer.setPreferredSize(new Dimension(320, 260));
+
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setBackground(new Color(245, 248, 250)); 
@@ -180,6 +184,9 @@ public class Dashboard extends JFrame {
 		rightPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 		rightPanel.add(pnlRisk);
 		rightPanel.add(Box.createVerticalGlue());
+		rightPanel.add(Box.createVerticalStrut(15));
+		rightPanel.add(graphVisualizer);
+
 
 		add(rightPanel, BorderLayout.EAST);
 	}

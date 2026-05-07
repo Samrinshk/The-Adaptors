@@ -1,4 +1,5 @@
 package ui;
+
 import javax.swing.*;
 
 import structures.GraphEdge;
@@ -9,82 +10,116 @@ import java.awt.*;
 import java.util.List;
 
 public class GraphVisualizer extends JPanel {
-    
-    private RAG currentRag;
-    
-    private static final int MAX_DRAW_LIMIT = 8000; 
 
-    public GraphVisualizer() {
-        setBackground(Color.BLACK);
-    }
+	private RAG rag;
 
-    public void setGraph(RAG rag) {
-        this.currentRag = rag;
-        repaint(); // Force the panel to redraw when a new graph is loaded
-    }
+	public GraphVisualizer() {
+		setPreferredSize(new Dimension(320, 260));
+		setBackground(new Color(20, 24, 28));
+		setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(60, 70, 80), 1),
+				BorderFactory.createEmptyBorder(10, 10, 10, 10)
+		));
+	}
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+	public void setGraph(RAG rag) {
+		this.rag = rag;
+		repaint();
+	}
 
-        if (currentRag == null || currentRag.getNodeCount() == 0) {
-            g.setColor(Color.DARK_GRAY);
-            g.drawString("No Graph Data Loaded", getWidth() / 2 - 60, getHeight() / 2);
-            return;
-        }
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        List<RegionNode> nodes = currentRag.getAllNodes();
-        List<GraphEdge> edges = currentRag.getAllEdges();
+		// Title
+		g2.setColor(Color.WHITE);
+		g2.setFont(new Font("SansSerif", Font.BOLD, 15));
+		g2.drawString("Graph Representation", 10, 20);
 
-        
-        double maxX = 1;
-        double maxY = 1;
-        for (RegionNode n : nodes) {
-            if (n.getX() > maxX) maxX = n.getX();
-            if (n.getY() > maxY) maxY = n.getY();
-        }
-        
-        
-        double scaleX = (getWidth() - 40) / maxX;
-        double scaleY = (getHeight() - 40) / maxY;
+		if (rag == null || rag.getAllNodes() == null || rag.getAllNodes().isEmpty()) {
+			g2.setColor(new Color(170, 180, 190));
+			g2.setFont(new Font("SansSerif", Font.PLAIN, 13));
+			g2.drawString("No graph loaded yet", 10, 50);
+			return;
+		}
 
-        
-        g2d.setColor(new Color(100, 150, 255, 50)); // Semi-transparent light blue
-        int edgeCount = 0;
-        for (GraphEdge edge : edges) {
-            if (edgeCount++ > MAX_DRAW_LIMIT) break; // Safety stop
+		List<RegionNode> nodes = rag.getAllNodes();
+		List<GraphEdge> edges = rag.getAllEdges();
 
-            RegionNode source = edge.getSource();
-            RegionNode dest = edge.getDestination();
+		int panelWidth = getWidth();
+		int panelHeight = getHeight();
 
-            int x1 = (int) (source.getX() * scaleX) + 20;
-            int y1 = (int) (source.getY() * scaleY) + 20;
-            int x2 = (int) (dest.getX() * scaleX) + 20;
-            int y2 = (int) (dest.getY() * scaleY) + 20;
+		int drawLeft = 15;
+		int drawTop = 35;
+		int drawWidth = panelWidth - 30;
+		int drawHeight = panelHeight - 70;
 
-            g2d.drawLine(x1, y1, x2, y2);
-        }
+		double maxX = 1;
+		double maxY = 1;
 
-        
-        g2d.setColor(Color.RED);
-        int nodeCount = 0;
-        for (RegionNode node : nodes) {
-            if (nodeCount++ > MAX_DRAW_LIMIT) break; // Safety stop
+		for (int i = 0; i < nodes.size(); i++) {
+			RegionNode node = nodes.get(i);
 
-            int x = (int) (node.getX() * scaleX) + 20;
-            int y = (int) (node.getY() * scaleY) + 20;
-            
-            
-            g2d.fillOval(x - 2, y - 2, 4, 4);
-        }
-        
-        // Add a warning label if we hit the limit
-        if (nodes.size() > MAX_DRAW_LIMIT || edges.size() > MAX_DRAW_LIMIT) {
-             g2d.setColor(Color.YELLOW);
-             g2d.drawString("Warning: Graph too large. Only displaying partial rendering.", 10, 20);
-        }
-    }
+			if (node.getX() > maxX) {
+				maxX = node.getX();
+			}
+
+			if (node.getY() > maxY) {
+				maxY = node.getY();
+			}
+		}
+
+		// Draw edge count / node count
+		g2.setColor(new Color(170, 180, 190));
+		g2.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		g2.drawString("Nodes: " + nodes.size() + "   Edges: " + edges.size(), 10, panelHeight - 12);
+
+		// Sample edges if there are too many
+		int edgeStep = 1;
+		if (edges.size() > 4000) {
+			edgeStep = Math.max(1, edges.size() / 4000);
+		}
+
+		g2.setColor(new Color(90, 140, 190, 70));
+
+		for (int i = 0; i < edges.size(); i += edgeStep) {
+			GraphEdge edge = edges.get(i);
+
+			// If your GraphEdge uses different getter names,
+			// replace these two lines with your actual method names.
+			RegionNode a = edge.getSource();
+			RegionNode b = edge.getDestination();
+			
+			int x1 = drawLeft + (int) ((a.getX() / maxX) * drawWidth);
+			int y1 = drawTop + (int) ((a.getY() / maxY) * drawHeight);
+
+			int x2 = drawLeft + (int) ((b.getX() / maxX) * drawWidth);
+			int y2 = drawTop + (int) ((b.getY() / maxY) * drawHeight);
+
+			g2.drawLine(x1, y1, x2, y2);
+		}
+
+		// Sample nodes if there are too many
+		int nodeStep = 1;
+		if (nodes.size() > 8000) {
+			nodeStep = Math.max(1, nodes.size() / 8000);
+		}
+
+		for (int i = 0; i < nodes.size(); i += nodeStep) {
+			RegionNode node = nodes.get(i);
+
+			int x = drawLeft + (int) ((node.getX() / maxX) * drawWidth);
+			int y = drawTop + (int) ((node.getY() / maxY) * drawHeight);
+
+			int intensity = node.getIntensity();
+			int red = Math.min(255, 100 + (intensity / 2));
+			int green = Math.max(70, 220 - intensity / 2);
+
+			g2.setColor(new Color(red, green, 90));
+			g2.fillOval(x - 2, y - 2, 5, 5);
+		}
+	}
 }
