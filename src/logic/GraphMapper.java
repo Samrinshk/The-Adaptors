@@ -1,6 +1,3 @@
-/**
- * This class will extract the pixel values and categorize them based on calsification intensity
- */
 package logic;
 
 import java.awt.*;
@@ -12,7 +9,9 @@ import java.util.List;
 import structures.RAG;
 import structures.RegionNode;
 
-
+/**
+ * This class will extract the pixel values and categorize them based on calsification intensity
+ */
 @SuppressWarnings("unused")
 public class GraphMapper {
 
@@ -26,7 +25,11 @@ public class GraphMapper {
 	
 	private int steps = 10;
 
-	//the constructor that receives the array of loaded images from the imageloader class
+	/**
+	 * The constructor that receives the array of loaded images from the imageloader class
+	 * 
+	 * @param images - array of slices
+	 */
 	public GraphMapper(BufferedImage[] images) {
 		this.loadedimages = images;
 	}
@@ -34,7 +37,8 @@ public class GraphMapper {
 
 	/**
 	 * we will implement a triple nested loop to traverse the 3D space
-	 * @return 
+	 * 
+	 * @return RAG representing the 3D structure
 	 */
 	public RAG translateToGraph() {
 		RAG rag = new RAG();
@@ -96,6 +100,7 @@ public class GraphMapper {
 	}
 
 	/**
+	 * Loops through the list of nodes to establish a connection 
 	 * 
 	 * @param rag: the graoh that is being built
 	 * @param nodes: the list of nodes creates 
@@ -117,8 +122,9 @@ public class GraphMapper {
 
 	/**
 	 * this checks whether the two nodes are close enough in the 3D space to be connected
-	 * @param a
-	 * @param b
+	 * 
+	 * @param a - first node
+	 * @param b - second node
 	 * @return if the nodes are adjacent we return true, otherwise we return false
 	 */
 	private boolean isAdjecent(RegionNode a, RegionNode b) {

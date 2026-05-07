@@ -1,17 +1,23 @@
 package data;
+
 import java.awt.image.BufferedImage;
 
 /**
- * Thato: 224022442
- * Refiloe: 221014292
- * Samrin: 222005020
- * Naledi: 218104732
  * @see ImageProcessor.java
+ * 
+ * Represents a single image "slice" within a larger sequence or dataset.
  */
 public class ImageSlice {
 	BufferedImage image;
 	int index;
 	
+	
+	/**
+	 * Constructor for ImageSlice class
+	 * 
+	 * @param image - to be stored 
+	 * @param index - index represnting the slice's position 
+	 */
 	public ImageSlice(BufferedImage image, int index) {
 		this.image = image;
 		this.index = index;
@@ -24,7 +30,5 @@ public class ImageSlice {
 	public int getIndex() {
 		return index;
 	}
-	
-	
-	
+
 }

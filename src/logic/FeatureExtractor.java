@@ -1,14 +1,21 @@
 package logic;
+
 import java.util.List;
 
 import structures.RAG;
 import structures.RegionNode;
 
+/**
+ * Responsible for converting a RAG into numerical features
+ */
 public class FeatureExtractor {
 
 	/**
-	 * this fuction is used to extract th emain graph features from a RAG
+	 * this fuction is used to extract the main graph features from a RAG
 	 * These features will be used in the KDTrees and the KNN
+	 * 
+	 * @param rag - structure to analyze 
+	 * @return - object with the data
 	 */
 	public GraphFeatures extractFeatures(RAG rag) {
 		int nodeCount = rag.getNodeCount();
@@ -28,8 +35,9 @@ public class FeatureExtractor {
 	
 	/**
 	 * Calculates the average intensity of all nodes in the graph.
-	 * @param nodes
-	 * @return the average node intensity
+	 * 
+	 * @param nodes - list of nodes
+	 * @return - the average node intensity
 	 */
 	private double calculateAverageIntensity(List<RegionNode> nodes) {
 		if(nodes == null || nodes.isEmpty()) {
@@ -47,9 +55,10 @@ public class FeatureExtractor {
 	
 	/**
 	 * this function calculates the average degree of an undirected graph
-	 * @param nodeCount
-	 * @param edgeCount
-	 * @return average degree
+	 * 
+	 * @param nodeCount - total number of regions
+	 * @param edgeCount - total number of adjacencies
+	 * @return average number of connections per node 
 	 */
 	private double calculateAverageDegree(int nodeCount, int edgeCount){
 		if(nodeCount == 0) {
@@ -59,6 +68,13 @@ public class FeatureExtractor {
 		
 	}
 	
+	/**
+	 * Calculates graph density 
+	 * 
+	 * @param nodeCount - total number of regions
+	 * @param edgeCount - total number of adjacencies
+	 * @return - value between 0 and 1 to represnet graph completeness
+	 */
 	private double calculateDensity(int nodeCount, int edgeCount) {
 		if(nodeCount <= 1) {
 			return 0;

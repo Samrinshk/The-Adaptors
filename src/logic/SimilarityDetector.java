@@ -1,15 +1,23 @@
 package logic;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import data.Patient;
 
+/**
+ * Uses methods to determine similarity between patient datasets
+ */
 public class SimilarityDetector {
 	
 	/**
-	 * Compares 2 functions and returns the distance
+	 * Compares 2 functions 
 	 * (lower value = more similar)
+	 * 
+	 * @param a - first graph feature 
+	 * @param b - second graph feature
+	 * @return the distance
 	 */
 	public double compare(GraphFeatures a, GraphFeatures b )
 	{
@@ -26,6 +34,11 @@ public class SimilarityDetector {
 	
 	/**
 	 * Finds the top 'k' most similar patients to a target patient
+	 * 
+	 * @param target - patient used as the reference
+	 * @param dataset - list of patients
+	 * @param k - number of matches to return 
+	 * @return - list of the most similar patient objects sorted by distance
 	 */
 	public List<Patient> findTopMatch(Patient target, List<Patient> dataset, int k)
 	{

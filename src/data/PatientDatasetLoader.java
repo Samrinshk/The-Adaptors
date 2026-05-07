@@ -1,4 +1,5 @@
 package data;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -9,10 +10,16 @@ import logic.GraphFeatures;
 import logic.GraphMapper;
 import structures.RAG;
 
+/**
+ * Handles the loading and processing of patient data from the file
+ */
 public class PatientDatasetLoader {
 
 	/**
 	 * Loads unknown patients from Images/Patients.
+	 * 
+	 * @param datasetPath - directory containing images 
+	 * @return - a list of processed patients
 	 */
 	public List<Patient> loadPatients(String datasetPath) {
 		List<Patient> patients = new ArrayList<>();
@@ -77,8 +84,9 @@ public class PatientDatasetLoader {
 
 	/**
 	 * Loads known patients from Images/Known Des.
-	 * Folder format:
-	 * patientID - category
+	 * 
+	 * @param datasetPath- directory containing images 
+	 * @return - a list of processed patients
 	 */
 	public List<Patient> loadKnownPatients(String datasetPath) {
 		List<Patient> patients = new ArrayList<>();
@@ -163,6 +171,12 @@ public class PatientDatasetLoader {
 		return patients;
 	}
 
+	/**
+	 * Search for a path containing the valid image files
+	 * 
+	 * @param folder - file path 
+	 * @return - the path containing images / none
+	 */
 	private File findImageFolder(File folder) {
 		File[] files = folder.listFiles();
 
@@ -195,6 +209,12 @@ public class PatientDatasetLoader {
 		return null;
 	}
 
+	/**
+	 * Checks if a file name corresponds to a supported image format
+	 * 
+	 * @param fileName - name to check
+	 * @return - if the file extension is a supported image type
+	 */
 	private boolean isImageFile(String fileName) {
 		String lower = fileName.toLowerCase();
 

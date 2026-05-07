@@ -1,16 +1,11 @@
 package data;
-import java.util.List;
 
+import java.util.List;
 import logic.GraphFeatures;
 import structures.RAG;
 
 /**
- * Thato: 224022442
- * Refiloe: 221014292
- * Samrin: 222005020
- * Naledi: 218104732
- * 
- * Patient class
+ * Represents a patient profile
  */
 public class Patient {
 	
@@ -20,16 +15,26 @@ public class Patient {
 	private GraphFeatures features;
 	private String category;
 	
-	
-	
+	/**
+	 * Constructir for Patient class 
+	 * Creates a patient with a known category
+	 * 
+	 * @param id - patient id 
+	 * @param category - classification
+	 * @param imgSlices - list of slices of one ct scan 
+	 */
 	public Patient(String id, String category, List<ImageSlice> imgSlices) {
 		this.id = id;
 		this.imgSlices = imgSlices;
 		this.category = category;
 	}
 	
+	
 	/**
 	 * Constructor for unknown patients.
+	 * 
+	 * @param id - patient id 
+	 * @param imgSlices - list of slices of one ct scan 
 	 */
 	public Patient(String id, List<ImageSlice> imgSlices) {
 		this.id = id;
@@ -77,6 +82,11 @@ public class Patient {
 		this.category = category;
 	}
 	
+	/**
+	 * Determines if the patient has a valid, known category
+	 * 
+	 * @return - category or unknown
+	 */
 	public boolean hasKnownCategory() {
 		return category != null
 				&& !category.trim().isEmpty()
