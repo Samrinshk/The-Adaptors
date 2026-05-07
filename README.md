@@ -24,7 +24,7 @@ Then Click start classification then the following will be updated
 *Predicted disease category
 *Risk assessment result 
 
-
+Youtube video: https://youtu.be/OF6LRdZ9vHY
 
 
 
