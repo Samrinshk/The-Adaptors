@@ -9,10 +9,19 @@ import structures.RegionNode;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * GraphVisualiser class; used to display segmented image region relationships in a graphical format
+ * Visually displays a RAG
+ * @see Dashboard.java, MIPGenerator.java, MIPTester.java
+ */
 public class GraphVisualizer extends JPanel {
 
 	private RAG rag;
 
+	/**
+	 * Constructs graphvisualiser panel and sets its 
+	 * appearance, size, background colour, and border styling
+	 */
 	public GraphVisualizer() {
 		setPreferredSize(new Dimension(320, 260));
 		setBackground(new Color(20, 24, 28));
@@ -27,6 +36,11 @@ public class GraphVisualizer extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * Paints the graph visualisation onto the panel (JPanel)
+	 * The graph coordinates are scaled dynamically to fit the panel.
+	 * @param Graphics g
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

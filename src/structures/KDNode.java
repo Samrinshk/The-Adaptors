@@ -1,6 +1,10 @@
 package structures;
 import data.Patient;
 
+/**
+ * Represents a node within a KD-tree data structure
+ * @see GraphEdge.java, INode.java, KDTree.java, RAG.java, RegionNode.java
+ */
 public class KDNode {
 	double[] point;
 	
@@ -11,6 +15,7 @@ public class KDNode {
 	
 	/**
 	 * Constructor for new KD-Tree Node
+	 * 
 	 * @param point 
 	 * @param patient
 	 * @param left

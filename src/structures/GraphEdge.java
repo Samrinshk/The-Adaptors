@@ -1,9 +1,23 @@
 package structures;
+
+/**
+ * This class:
+ * used to represent weighted connection between two RegionNode Objects
+ * in RAG
+ * @see RegionNode.java, KDNode.java, KDTree.java, RAG.java, RegionNode.javas
+ */
 public class GraphEdge {
 	private RegionNode source;
 	private RegionNode destination;
 	private double weight;
 	
+	/**
+	 * Contructor for graphedge class
+	 * 
+	 * @param source
+	 * @param destination
+	 * @param weight
+	 */
 	public GraphEdge(RegionNode source, RegionNode destination, double weight) {
 		super();
 		this.source = source;

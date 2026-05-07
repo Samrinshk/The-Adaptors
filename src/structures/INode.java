@@ -1,15 +1,10 @@
 package structures;
+
 /**
- * Thato: 224022442
- * Refiloe: 221014292
- * Samrin: 222005020
- * Naledi: 218104732
- * 
  * Interface for a Graph Node. 
  * Essential for translating image data into graph constructs
+ * @see GraphEdge.java, KDNode.java, KDTree.java, RAG.java, RegionNode.java
  */
-
-
 public interface INode<T> 
 {
 	T getElement();						//gets the data element stored in the node

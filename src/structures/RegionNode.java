@@ -14,6 +14,13 @@ public class RegionNode implements INode<Integer> {
 	private int intensity;//this is the greyscale value it is >200 but it will also help in similarity detection
 	
 	
+	/**
+	 * @param id
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param intensity
+	 */
 	public RegionNode(int id, int x, int y, int z, int intensity) {
 		this.id =id;
 		this.x = x;

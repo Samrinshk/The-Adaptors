@@ -1,4 +1,5 @@
 package ui;
+
 import javax.swing.*;
 
 import data.Patient;
@@ -15,9 +16,13 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Dashboard class, extends JFrame, UI design setup
+ * Main graphical user interface
+ * @see GraphVisualizer.java, MIPGenerator.java, MIPTester.java
+ */
 public class Dashboard extends JFrame {
 
-	
 	private List<Patient> loadedPatients;
 	private Patient currentPatient;
 	private GraphVisualizer graphVisualizer;
@@ -40,6 +45,9 @@ public class Dashboard extends JFrame {
 	private JLabel lblStatus;
 	private JLabel lblLoadedPatient;
 
+	/**
+	 * constructs dashboard window
+	 */
 	public Dashboard() {
 		setTitle("The Adaptors: CT Calcification Analyzer");
 		setSize(1200, 800);
@@ -60,6 +68,9 @@ public class Dashboard extends JFrame {
 		setupDragAndDrop();
 	}
 
+	/**
+	 * builds left-side control of the panel
+	 */
 	private void buildLeftPanel() {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
@@ -129,6 +140,11 @@ public class Dashboard extends JFrame {
 		add(leftPanel, BorderLayout.WEST);
 	}
 
+	/**
+	 * This method: 
+	 * Builds the center panel use
+	 * generates 3D MIP images
+	 */
 	private void buildCenterPanel() {
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.WHITE);
@@ -150,6 +166,10 @@ public class Dashboard extends JFrame {
 		add(centerPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * this method:
+	 * builds right-side panel
+	 */
 	private void buildRightPanel() {
 		graphVisualizer = new GraphVisualizer();
 		graphVisualizer.setPreferredSize(new Dimension(320, 260));
@@ -191,6 +211,11 @@ public class Dashboard extends JFrame {
 		add(rightPanel, BorderLayout.EAST);
 	}
 
+	/**
+	 * This mehtod:
+	 * builds the bottom status bar
+	 * used to display status message and the loaded patient details
+	 */
 	private void buildBottomBar() {
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBackground(new Color(0, 86, 139)); // Navy Blue
@@ -209,6 +234,13 @@ public class Dashboard extends JFrame {
 		add(bottomPanel, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * creates a reusable dashboard information card
+	 * used to display dynamic patient analysis results
+	 * @param title
+	 * @param valLabel
+	 * @return a configured JPanel
+	 */
 	private JPanel createCard(String title, JLabel valLabel) {
 		JPanel card = new JPanel(new GridLayout(2, 1, 0, 5));
 		card.setBackground(Color.WHITE);
@@ -230,6 +262,10 @@ public class Dashboard extends JFrame {
 
 	// --- ACTION LISTENERS ---
 
+	/**
+	 * This method:
+	 * is used to set up the buttons, dropdown menues, and event listeners
+	 */
 	private void setupActionListeners() {
 
 		
@@ -274,6 +310,12 @@ public class Dashboard extends JFrame {
 
 	// --- BACKGROUND THREADS ---
 
+	/**
+	 * This method:
+	 * Loads patient datasets in a background thread to avoid having the GUI freeze
+	 * loads patients and add to the patient selection
+	 * @param folderPath
+	 */
 	private void loadDataInBackground(String folderPath) {
 		progressBar.setVisible(true);
 		lblStatus.setText("System Status: Loading Directory Data...");
@@ -331,6 +373,12 @@ public class Dashboard extends JFrame {
 			worker.execute();
 	}
 
+	/**
+	 * This method:
+	 * Generates a MIP image for the selected patient in background
+	 * the image is then displayed in the scan preview panel
+	 * @param patient
+	 */
 	private void generateMIPInBackground(Patient patient) {
 		progressBar.setVisible(true);
 		lblStatus.setText("System Status: Generating 3D MIP Image...");
@@ -365,6 +413,11 @@ public class Dashboard extends JFrame {
 		worker.execute();
 	}
 
+	/**
+	 * This method:
+	 * uses KNN and KD-Tree structures to execute disease classification
+	 * and graph analysis
+	 */
 	private void runClassificationInBackground() {
 		progressBar.setVisible(true);
 		btnStartClass.setEnabled(false);
@@ -454,7 +507,12 @@ public class Dashboard extends JFrame {
 		};
 		worker.execute();}
 		
-		private void setupDragAndDrop() {
+	/**
+	 * This method:
+	 * used to support drag-and-drop support for loading patient data
+	 * directly into the app window
+	 */
+	private void setupDragAndDrop() {
 	        
 	        new DropTarget(this, new DropTargetAdapter() {
 	            @Override
@@ -494,6 +552,10 @@ public class Dashboard extends JFrame {
 	        });
 	}
 
+	/**
+	 * Applications entry point
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
