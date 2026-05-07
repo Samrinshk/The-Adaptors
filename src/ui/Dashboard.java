@@ -248,6 +248,7 @@ public class Dashboard extends JFrame {
 			if (patientDropdown.getSelectedIndex() >= 0 && !loadedPatients.isEmpty()) {
 				
 				currentPatient = loadedPatients.get(patientDropdown.getSelectedIndex());
+				graphVisualizer.setGraph(currentPatient.getRag());
 
 				
 				lblLoadedPatient.setText("Loaded Patient: " + currentPatient.getId());
@@ -300,6 +301,11 @@ public class Dashboard extends JFrame {
 						for (Patient p : loadedPatients) {
 							patientDropdown.addItem(p.getId());
 						}
+						
+						currentPatient = loadedPatients.get(0);
+						graphVisualizer.setGraph(currentPatient.getRag());
+						lblLoadedPatient.setText("Loaded Patient: " + currentPatient.getId());
+						generateMIPInBackground(currentPatient);
 
 						
 						patientDropdown.setEnabled(true); 
@@ -327,7 +333,7 @@ public class Dashboard extends JFrame {
 
 	private void generateMIPInBackground(Patient patient) {
 		progressBar.setVisible(true);
-		lblStatus.setText("System Status: Generating 2D MIP Image...");
+		lblStatus.setText("System Status: Generating 3D MIP Image...");
 
 		SwingWorker<BufferedImage, Void> worker = new SwingWorker<>() {
 			@Override
