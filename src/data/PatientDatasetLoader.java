@@ -100,20 +100,32 @@ public class PatientDatasetLoader {
 			if (patientFolder.isDirectory()) {
 				String folderName = patientFolder.getName();
 
+				
+				File imageFolder = findImageFolder(patientFolder);
+
+				if (imageFolder == null) {
+					System.out.println("No image folder found for known patient: " + folderName);
+					continue;
+				}
+
 				String patientID = folderName;
 				String category = "Unknown";
 
+				
 				String[] parts = folderName.split(" - ", 2);
 				if (parts.length == 2) {
 					patientID = parts[0].trim();
 					category = parts[1].trim();
-				}
-
-				File imageFolder = findImageFolder(patientFolder);
-
-				if (imageFolder == null) {
-					System.out.println("No image folder found for known patient: " + patientID);
-					continue;
+				} else {
+					
+					category = folderName; 
+					
+					
+					if(imageFolder.equals(patientFolder)) {
+					    patientID = "Patient_" + System.currentTimeMillis() % 1000;
+					} else {
+					    patientID = imageFolder.getName(); 
+					}
 				}
 
 				ImageLoader ILoader = new ImageLoader(imageFolder.getPath());

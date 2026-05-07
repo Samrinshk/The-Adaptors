@@ -370,8 +370,17 @@ public class Dashboard extends JFrame {
 			@Override
 			protected String[] doInBackground() throws Exception {
 				PatientDatasetLoader loader = new PatientDatasetLoader();
+				
+				
 
 				List<Patient> knownPatients = loader.loadKnownPatients("Images/Known Des");
+				
+				// --- ADD THESE 3 LINES TO DEBUG ---
+				System.out.println("DEBUG: Loaded " + knownPatients.size() + " known patients.");
+				if(!knownPatients.isEmpty()) {
+				    System.out.println("DEBUG: Disease of first known patient is: " + knownPatients.get(0).getCategory());
+				}
+				// ----------------------------------
 
 				KDTree tree = new KDTree();
 				for (Patient p : knownPatients) {
@@ -401,8 +410,7 @@ public class Dashboard extends JFrame {
 				    } else if (avgIntensity < 210) {
 				        riskLevel = "Low";
 				    } else {
-				        // I fixed your commented-out logic here! If it's not > 250 and not < 210, 
-				        // it naturally falls into the "Moderate" category without needing complex OR/AND operators.
+				        
 				        riskLevel = "Moderate"; 
 				    }
 				}
@@ -427,11 +435,11 @@ public class Dashboard extends JFrame {
 
 					// Dynamic Color Coding based on Risk Assessment
 					if (results[2].contains("High")) {
-						lblValRisk.setForeground(new Color(204, 0, 0)); // Red for High Risk
+						lblValRisk.setForeground(new Color(204, 0, 0)); 
 					} else if (results[2].contains("Low")) {
-						lblValRisk.setForeground(new Color(0, 153, 51)); // Green for Low Risk
+						lblValRisk.setForeground(new Color(0, 153, 51)); 
 					} else {
-						lblValRisk.setForeground(new Color(204, 102, 0)); // Orange for Moderate Risk
+						lblValRisk.setForeground(new Color(204, 102, 0)); 
 					}
 
 					lblStatus.setText("System Status: Classification Complete");
@@ -447,28 +455,28 @@ public class Dashboard extends JFrame {
 		worker.execute();}
 		
 		private void setupDragAndDrop() {
-	        // Attach a DropTarget to the entire JFrame
+	        
 	        new DropTarget(this, new DropTargetAdapter() {
 	            @Override
 	            public void drop(DropTargetDropEvent event) {
 	                try {
-	                    // Accept the dropped file
+	                    
 	                    event.acceptDrop(DnDConstants.ACTION_COPY);
 	                    Transferable transferable = event.getTransferable();
 
-	                    // Check if the dropped item is a file/folder list
+	                    
 	                    if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 	                        
-	                        // Suppress unchecked cast warning for the file list
+	                        
 	                        @SuppressWarnings("unchecked")
 	                        java.util.List<File> files = (java.util.List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
 
 	                        if (!files.isEmpty()) {
 	                            File droppedItem = files.get(0);
 	                            
-	                            // Check if they dropped a folder (like the master "Patients" folder)
+	                            
 	                            if (droppedItem.isDirectory()) {
-	                                // Trigger your exact same background loader!
+	                                
 	                                loadDataInBackground(droppedItem.getAbsolutePath());
 	                            } else {
 	                                JOptionPane.showMessageDialog(Dashboard.this, 
