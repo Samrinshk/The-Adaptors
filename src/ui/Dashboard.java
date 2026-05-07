@@ -381,13 +381,7 @@ public class Dashboard extends JFrame {
 
 				List<Patient> knownPatients = loader.loadKnownPatients("Images/Known Des");
 				
-				// --- ADD THESE 3 LINES TO DEBUG ---
-				System.out.println("DEBUG: Loaded " + knownPatients.size() + " known patients.");
-				if(!knownPatients.isEmpty()) {
-				    System.out.println("DEBUG: Disease of first known patient is: " + knownPatients.get(0).getCategory());
-				}
-				// ----------------------------------
-
+				
 				KDTree tree = new KDTree();
 				for (Patient p : knownPatients) {
 					GraphFeatures f = p.getFeatures();
