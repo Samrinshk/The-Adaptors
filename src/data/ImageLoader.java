@@ -19,7 +19,10 @@ public class ImageLoader {
 	//stores all succesfully loaded image slices
 	private BufferedImage [] loadedimages;
 
-	
+	/**
+	 * Constructor for the ImageLoader class 
+	 * @param path - file path 
+	 */
 	public ImageLoader(String path) {
 
 		File folder = new File(path);

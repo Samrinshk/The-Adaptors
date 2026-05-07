@@ -407,7 +407,7 @@ public class Dashboard extends JFrame {
 				String diseaseResult = knn.Classify(currentPatient, tree); 
 				
 				if(diseaseResult.toLowerCase().contains("aortic dissection")) {
-				    riskLevel = "EMERGENCY ROOM NOW!!";
+				    riskLevel = "EMERGENCY";
 				}else {
 				    double avgIntensity = currentPatient.getFeatures().getAvgIntensity();
 				    
