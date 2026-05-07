@@ -1,5 +1,8 @@
+package ui;
 import java.awt.image.BufferedImage;
 import java.util.List;
+
+import data.ImageSlice;
 
 /**
  * This class generates a combined projection image from CT scan slices.

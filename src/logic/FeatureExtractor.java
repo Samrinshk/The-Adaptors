@@ -1,4 +1,8 @@
+package logic;
 import java.util.List;
+
+import structures.RAG;
+import structures.RegionNode;
 
 public class FeatureExtractor {
 

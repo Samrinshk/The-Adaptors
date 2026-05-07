@@ -1,3 +1,4 @@
+package logic;
 
 public class GraphFeatures {
 	private int nodeCount;

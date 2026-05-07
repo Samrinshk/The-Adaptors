@@ -1,3 +1,5 @@
+package structures;
+
 /**
  * The pixels which reach the intensity threshold will be represented by the attributes in this class
  */

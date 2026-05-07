@@ -1,6 +1,9 @@
+package logic;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import data.Patient;
 
 public class SimilarityDetector {
 	

@@ -2,7 +2,13 @@
  * this is just to test if the MIPGenerator works, it will not be in
  * the final draft
  */
+package ui;
+
 import javax.imageio.ImageIO;
+
+import data.Patient;
+import data.PatientDatasetLoader;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

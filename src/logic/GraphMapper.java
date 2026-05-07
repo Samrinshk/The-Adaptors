@@ -1,11 +1,16 @@
 /**
  * This class will extract the pixel values and categorize them based on calsification intensity
  */
+package logic;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.util.ArrayList;
 import java.util.List;
+
+import structures.RAG;
+import structures.RegionNode;
 
 
 @SuppressWarnings("unused")

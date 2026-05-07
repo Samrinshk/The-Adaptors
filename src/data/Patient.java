@@ -1,4 +1,8 @@
+package data;
 import java.util.List;
+
+import logic.GraphFeatures;
+import structures.RAG;
 
 /**
  * Thato: 224022442

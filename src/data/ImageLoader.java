@@ -3,6 +3,7 @@
  *due to the fact that there are so many images that need to be loaded we will load
  *the images by the folder instead if one by one
  */
+package data;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

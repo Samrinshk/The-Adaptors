@@ -1,4 +1,4 @@
-
+package structures;
 public class GraphEdge {
 	private RegionNode source;
 	private RegionNode destination;

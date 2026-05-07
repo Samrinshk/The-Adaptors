@@ -1,7 +1,10 @@
+package structures;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import data.Patient;
 
 /**
  * Thato: 224022442

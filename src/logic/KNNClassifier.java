@@ -1,4 +1,8 @@
+package logic;
 import java.util.List;
+
+import data.Patient;
+import structures.KDTree;
 
 /**
  * This class classifies an unknown patient by finding

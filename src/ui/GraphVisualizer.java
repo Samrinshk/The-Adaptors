@@ -1,4 +1,10 @@
+package ui;
 import javax.swing.*;
+
+import structures.GraphEdge;
+import structures.RAG;
+import structures.RegionNode;
+
 import java.awt.*;
 import java.util.List;
 

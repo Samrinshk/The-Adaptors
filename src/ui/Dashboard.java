@@ -1,4 +1,12 @@
+package ui;
 import javax.swing.*;
+
+import data.Patient;
+import data.PatientDatasetLoader;
+import logic.GraphFeatures;
+import logic.KNNClassifier;
+import structures.KDTree;
+
 import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 import java.awt.*;

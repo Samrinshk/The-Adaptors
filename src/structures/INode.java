@@ -1,3 +1,4 @@
+package structures;
 /**
  * Thato: 224022442
  * Refiloe: 221014292

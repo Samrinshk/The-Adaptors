@@ -1,7 +1,13 @@
+package data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import logic.FeatureExtractor;
+import logic.GraphFeatures;
+import logic.GraphMapper;
+import structures.RAG;
 
 public class PatientDatasetLoader {
 

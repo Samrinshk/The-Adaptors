@@ -1,3 +1,5 @@
+package structures;
+import data.Patient;
 
 public class KDNode {
 	double[] point;
